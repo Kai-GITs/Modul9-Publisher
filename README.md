@@ -46,3 +46,8 @@ Cloud Test:
 ![alt text](image-8.png)
 ![alt text](image-9.png)
 ![alt text](image-10.png)
+
+Cloud Reflection:
+The cloud experiment shows the same message flow as the local one, but the cloud setup appears to react faster. In the normal run, the queue stayed at 0 and the spikes were short, which means RabbitMQ and the subscriber handled the published messages very quickly. In the slow-subscriber test, the queue still increased, but it peaked at around 11, which was lower than my earlier local result. This suggests that the cloud environment processed and drained the queue more efficiently.
+
+With three subscribers, the cloud setup became even more responsive. The messages were distributed across multiple subscribers, and the queue buildup was much smaller than before. This shows that the cloud environment, combined with parallel consumers, reduced the delay more effectively than the earlier local runs.
