@@ -42,4 +42,5 @@ Suggested Code improvements: The subsriber program still uses std::thread::sleep
 
 Cloud Test:
 ![alt text](image-6.png)
+![alt text](image-7.png)
 
