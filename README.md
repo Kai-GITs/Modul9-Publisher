@@ -39,3 +39,7 @@ Before, with one slow subscriber and repeated publisher runs, messages accumulat
 Now, with three subscribers, the workload is shared. I still publish the same messages, but three consumers process them in parallel, so the queue drains much faster.
 
 Suggested Code improvements: The subsriber program still uses std::thread::sleep inside an async tokio program. That blocks the runtime thread. tokio::time::sleep(...).await would be cleaner and more correct. It also does not set QoS/prefetch. If you want fairer distribution among slow subscribers, set basic_qos(1, ...) so one consumer does not receive too many unacked messages at once.
+
+Cloud Test:
+![alt text](image-6.png)
+
