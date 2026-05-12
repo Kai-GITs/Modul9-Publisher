@@ -27,3 +27,15 @@ So the total became 15 because RabbitMQ temporarily stored the accumulated messa
 1 publisher run = 5 messages
 3 quick runs = 15 messages
 The chart then drops back down because the subscriber kept consuming those queued messages until the queue was empty again.
+
+Monitor 3 Slow Subscriber:
+![alt text](image-5.png)
+This image shows three subscriber processes running at the same time. Each terminal prints different UserCreatedEventMessage items, which means RabbitMQ is distributing the published messages across the three subscribers instead of one subscriber handling everything alone.
+![alt text](image-4.png)
+RabbitMQ with Connections: 3, Channels: 3, and Consumers: 3. The queued-messages graph stays at 0, while the message-rate graph shows short spikes in publish and consumer activity. That means messages were consumed quickly enough that they did not pile up in the queue.
+
+Before, with one slow subscriber and repeated publisher runs, messages accumulated in the queue, so you saw the queued total rise, such as 15. That happened because one consumer could not keep up.
+
+Now, with three subscribers, the workload is shared. I still publish the same messages, but three consumers process them in parallel, so the queue drains much faster.
+
+Suggested Code improvements: The subsriber program still uses std::thread::sleep inside an async tokio program. That blocks the runtime thread. tokio::time::sleep(...).await would be cleaner and more correct. It also does not set QoS/prefetch. If you want fairer distribution among slow subscribers, set basic_qos(1, ...) so one consumer does not receive too many unacked messages at once.
