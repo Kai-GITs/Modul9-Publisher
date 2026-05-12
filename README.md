@@ -17,3 +17,13 @@ Running cargo run in the publisher triggers the app to publish five user-created
 Monitoring:
 ![alt text](image-2.png)
 The spikes in the second chart are caused by repeatedly running the publisher. Each time the publisher runs, it sends a short burst of messages to RabbitMQ, so the broker briefly records higher message activity in the Publish and delivery-related rates. After those messages are consumed by the subscriber, the rate drops back to zero, which is why the chart shows sharp spikes.
+
+Monitoring Slow Subscriber:
+![alt text](image-3.png)
+The image shows that the queued message count briefly rose to around 15 before falling back to 0. That happened because each publisher run sends 5 messages, and since i ran the publisher several times quickly while the subscriber was slowed down by thread::sleep, messages arrived faster than the subscriber could process them.
+
+So the total became 15 because RabbitMQ temporarily stored the accumulated messages in the queue:
+
+1 publisher run = 5 messages
+3 quick runs = 15 messages
+The chart then drops back down because the subscriber kept consuming those queued messages until the queue was empty again.
