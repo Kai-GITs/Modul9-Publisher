@@ -9,3 +9,11 @@ It means that both the publisher and the subscriber programs are connecting to t
 
 RabbitMQ:
 ![alt text](image.png)
+
+Run:
+![alt text](image-1.png)
+Running cargo run in the publisher triggers the app to publish five user-created messages to the RabbitMQ broker, and the subscriber then reads and displays those messages.
+
+Monitoring:
+![alt text](image-2.png)
+The spikes in the second chart are caused by repeatedly running the publisher. Each time the publisher runs, it sends a short burst of messages to RabbitMQ, so the broker briefly records higher message activity in the Publish and delivery-related rates. After those messages are consumed by the subscriber, the rate drops back to zero, which is why the chart shows sharp spikes.
